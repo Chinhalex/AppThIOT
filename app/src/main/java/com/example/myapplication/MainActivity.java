@@ -39,11 +39,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getData();
 
-        button1 = findViewById(R.id.khung1); //Tìm lại button
+        button1 = findViewById(R.id.btnonled); //Tìm lại button
         button1.setOnClickListener(this);
-        mic = findViewById(R.id.khung2);
-        mic.setOnClickListener(this);
-        button2 = findViewById(R.id.khung3);
+        button2 = findViewById(R.id.btnoffled);
         button2.setOnClickListener(this);
         ifnhietdo = findViewById(R.id.nhietdo2);
         ifdoam = findViewById(R.id.doam2);
@@ -57,50 +55,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.khung1:
-                if (view.getId() == R.id.khung1 && id1 == 1) {
-                    Toast.makeText(MainActivity.this, "Bạn đa tat den", Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("den/bep");
-                    id1 = 0;
-                    myRef.setValue(id1);
-                } else if (view.getId() == R.id.khung1 && id1 == 0) {
+        switch (view.getId()) {
+            case R.id.btnonled:
+                if (view.getId() == R.id.btnonled) {
                     Toast.makeText(MainActivity.this, "Bạn đa bat den", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("den/bep");
-                    id1 = 1;
-                    myRef.setValue(id1);
+                    DatabaseReference myRef = database.getReference("led/status");
+                    myRef.setValue("true");
+                    break;
                 }
-                break;
-
-            case R.id.khung3:
-                if (view.getId() == R.id.khung3 && id2 == 1) {
+            case R.id.btnoffled:
+                if (view.getId() == R.id.btnoffled) {
                     Toast.makeText(MainActivity.this, "Bạn đa tat den", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("den/phongkhach");
-                    id2 = 0;
-                    myRef.setValue(id2);
-                } else if (view.getId() == R.id.khung3 && id2 == 0) {
-                    Toast.makeText(MainActivity.this, "Bạn đa bat den", Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference myRef = database.getReference("den/phongkhach");
-                    id2 = 1;
-                    myRef.setValue(id2);
+                    DatabaseReference myRef = database.getReference("led/status");
+                    myRef.setValue("false");
+
                 }
 
         }
-
     }
-
 
     private void getData(){
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference databaseReference = firebaseDatabase.getReference();
-        databaseReference.child("test/nhietdo").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("devices/nhietdo").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 float valuenhietdo = snapshot.getValue(Float.class);
@@ -116,33 +97,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-        databaseReference.child("test/doam").addValueEventListener(new ValueEventListener() {
+        databaseReference.child("devices/doam").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 float valuedoam = snapshot.getValue(Float.class);
                 ifdoam.setText(String.valueOf(valuedoam));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        databaseReference.child("den/bep").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                id1 = snapshot.getValue(Integer.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        databaseReference.child("den/phongkhach").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                id2 = snapshot.getValue(Integer.class);
             }
 
             @Override
